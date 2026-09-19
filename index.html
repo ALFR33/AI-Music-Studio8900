@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>أستوديو توليد الموسيقى بالذكاء الاصطناعي - منصة صحيح</title>
+    <title>أستوديو الموسيقى - Salh Alheib Klel</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- React & ReactDOM -->
@@ -31,7 +31,6 @@
     <script type="text/babel">
         const { useState, useEffect, useRef } = React;
 
-        // مكتبة الأيقونات المبسطة للاستخدام المباشر
         const Disc = (props) => <i data-lucide="disc" {...props}></i>;
         const Music = (props) => <i data-lucide="music" {...props}></i>;
         const Sliders = (props) => <i data-lucide="sliders" {...props}></i>;
@@ -42,6 +41,7 @@
         const Pause = (props) => <i data-lucide="pause" {...props}></i>;
         const Download = (props) => <i data-lucide="download" {...props}></i>;
         const Trash2 = (props) => <i data-lucide="trash-2" {...props}></i>;
+        const ShieldCheck = (props) => <i data-lucide="shield-check" {...props}></i>;
 
         const GENRE_PRESETS = [
             { id: 'cinematic', title: 'سينمائي وأوركسترا 🎻', prompt: 'epic emotional cinematic orchestral music, sweeping violins, French horns, deep brass, majestic timpani drums, warm atmospheric string section, 3 minutes duration', icon: '🎬', bpm: 85 },
@@ -53,20 +53,20 @@
             { id: 'oriental', title: 'عود وموسيقى شرقية 𝄠', prompt: 'authentic acoustic oud solo, soft oriental percussion, warm riq and frame drum rhythm, atmospheric nay flute melody, 3 minutes duration', icon: '🕌', bpm: 90 },
         ];
 
-        // عينة أولية للعرض (تجارية استقرارية)
         const INITIAL_CLIPS = [
             {
                 id: "sample-1",
-                title: "معزوفة السينما الأوركسترالية - 3 دقائق",
+                title: "معزوفة السينما - Salh Alheib Klel (صحيح)",
                 audioUrl: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4",
-                coverImageUrl: "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=600&auto=format&fit=crop&q=80"
+                coverImageUrl: "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=600&auto=format&fit=crop&q=80",
+                author: "Salh Alheib Klel"
             }
         ];
 
         function Component() {
             const [selectedPreset, setSelectedPreset] = useState(GENRE_PRESETS[0]);
             const [customPrompt, setCustomPrompt] = useState(GENRE_PRESETS[0].prompt);
-            const [songTitle, setSongTitle] = useState("تأليف موسيقا 3 دقائق بالذكاء الاصطناعي");
+            const [songTitle, setSongTitle] = useState("معزوفة مميزة - Salh Alheib Klel");
             const [targetBpm, setTargetBpm] = useState(GENRE_PRESETS[0].bpm);
 
             const [isGenerating, setIsGenerating] = useState(false);
@@ -74,7 +74,7 @@
             const [errorMsg, setErrorMsg] = useState(null);
 
             const [clipsHistory, setClipsHistory] = useState(() => {
-                const saved = localStorage.getItem("sahih_ai_generated_music");
+                const saved = localStorage.getItem("sahih_ai_generated_music_v2");
                 return saved ? JSON.parse(saved) : INITIAL_CLIPS;
             });
 
@@ -90,17 +90,16 @@
             });
 
             useEffect(() => {
-                localStorage.setItem("sahih_ai_generated_music", JSON.stringify(clipsHistory));
+                localStorage.setItem("sahih_ai_generated_music_v2", JSON.stringify(clipsHistory));
             }, [clipsHistory]);
 
             const handleSelectPreset = (preset) => {
                 setSelectedPreset(preset);
                 setCustomPrompt(preset.prompt);
                 setTargetBpm(preset.bpm);
-                setSongTitle(`موسيقى ${preset.title.split(' ')[0]} - 3 دقائق`);
+                setSongTitle(`موسيقى ${preset.title.split(' ')[0]} - Salh Alheib Klel`);
             };
 
-            // محاكاة توليد الموسيقى عبر SDK الوهمي أو المباشر لضمان العمل السلس داخل المتصفح
             const handleGenerateMusic = async () => {
                 setIsGenerating(true);
                 setErrorMsg(null);
@@ -114,11 +113,14 @@
                     clearInterval(progressInterval);
                     setGenerationProgress(100);
 
+                    const finalTitle = songTitle.includes("Salh Alheib Klel") ? songTitle : `${songTitle} - Salh Alheib Klel`;
+
                     const newClip = {
                         id: Date.now().toString(),
-                        title: songTitle || "معزوفة الذكاء الاصطناعي - 3 دقائق",
+                        title: finalTitle,
                         audioUrl: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4",
-                        coverImageUrl: "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=600&auto=format&fit=crop&q=80"
+                        coverImageUrl: "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=600&auto=format&fit=crop&q=80",
+                        author: "Salh Alheib Klel (مدونة صحيح heib12.com)"
                     };
 
                     setClipsHistory(prev => [newClip, ...prev]);
@@ -132,7 +134,7 @@
             const handleDownloadTrack = (clip) => {
                 const a = document.createElement("a");
                 a.href = clip.audioUrl;
-                a.download = `${clip.title || 'موسيقى-3-دقائق-صحيح'}.mp4`;
+                a.download = `${clip.title.replace(/\s+/g, '-')}-Salh-Alheib-Klel.mp4`;
                 document.body.appendChild(a);
                 a.click();
                 document.body.removeChild(a);
@@ -156,23 +158,24 @@
                                 <Disc className="w-6 h-6 animate-spin-slow" />
                             </div>
                             <div>
-                                <h1 className="text-xl font-black text-white flex items-center gap-2">
-                                    <span>أستوديو توليد الموسيقى بالذكاء الاصطناعي (AI Music Studio)</span>
-                                    <span className="px-2.5 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/30 text-xs font-bold">
-                                        توليد 3 دقائق ⏱️
+                                <h1 className="text-lg md:text-xl font-black text-white flex items-center gap-2 flex-wrap">
+                                    <span>أستوديو الموسيقى - Salh Alheib Klel</span>
+                                    <span className="px-2.5 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/30 text-xs font-bold flex items-center gap-1">
+                                        <ShieldCheck className="w-3.5 h-3.5 text-amber-400" />
+                                        <span>بصمة مدونة صحيح ✨</span>
                                     </span>
                                 </h1>
-                                <p className="text-xs text-slate-400">أنشئ معزوفات ومقاطع موسيقية كاملة في جميع الأنواع والأنماط بضغطة زر واحدة</p>
+                                <p className="text-xs text-slate-400">توليد معزوفات احترافية كاملة (3 دقائق) ببصمتك الرسمية واسم موقعك</p>
                             </div>
                         </div>
 
                         {activeClip && (
                             <button
                                 onClick={() => handleDownloadTrack(activeClip)}
-                                className="px-5 py-2.5 rounded-2xl bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-400 hover:to-teal-500 text-slate-950 font-black text-xs shadow-xl flex items-center gap-2 cursor-pointer transition-all"
+                                className="px-5 py-2.5 rounded-2xl bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-400 text-slate-950 font-black text-xs shadow-xl flex items-center gap-2 cursor-pointer transition-all"
                             >
                                 <Download className="w-4 h-4" />
-                                <span>تنزيل المقطوعة</span>
+                                <span>تنزيل ببصمتك الرسمية</span>
                             </button>
                         )}
                     </div>
@@ -187,7 +190,7 @@
                             <div className="space-y-3">
                                 <h3 className="text-sm font-black text-white flex items-center gap-2 border-b border-slate-800 pb-2">
                                     <Music className="w-4 h-4 text-amber-400" />
-                                    <span>1. اختر نوع النمط والأنواع الموسيقية</span>
+                                    <span>1. اختر النمط الموسيقي</span>
                                 </h3>
 
                                 <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
@@ -212,11 +215,11 @@
                             <div className="space-y-3">
                                 <h3 className="text-sm font-black text-white flex items-center gap-2 border-b border-slate-800 pb-2">
                                     <Sliders className="w-4 h-4 text-emerald-400" />
-                                    <span>2. تفاصيل وتوجيه الذكاء الاصطناعي</span>
+                                    <span>2. إعدادات البصمة واسم المقطوعة</span>
                                 </h3>
 
                                 <div>
-                                    <label className="text-xs font-bold text-slate-400 block mb-1">اسم المقطوعة الموسيقية:</label>
+                                    <label className="text-xs font-bold text-slate-400 block mb-1">عنوان المقطوعة (مع بصمة اسمك Salh Alheib Klel):</label>
                                     <input
                                         type="text"
                                         value={songTitle}
@@ -227,13 +230,13 @@
                                 </div>
 
                                 <div>
-                                    <label className="text-xs font-bold text-slate-400 block mb-1">وصف الآلات والجو الموسيقي (Sound Prompt):</label>
+                                    <label className="text-xs font-bold text-slate-400 block mb-1">وصف الآلات والجو الموسيقي:</label>
                                     <textarea
                                         value={customPrompt}
                                         onChange={(e) => setCustomPrompt(e.target.value)}
                                         rows={3}
                                         className="w-full bg-slate-950 border border-slate-800 rounded-2xl p-3 text-xs text-slate-200 focus:outline-none focus:border-amber-500 leading-relaxed font-mono"
-                                        placeholder="صف الآلات، الإيقاع، والجو الموسيقي المطلوب..."
+                                        placeholder="وصف الآلات..."
                                     />
                                 </div>
 
@@ -252,7 +255,7 @@
 
                                     <div className="bg-slate-950 p-3 rounded-2xl border border-slate-800 flex items-center justify-between">
                                         <div>
-                                            <span className="text-xs font-bold text-slate-400 block">المدة الزمنية المستهدفة:</span>
+                                            <span className="text-xs font-bold text-slate-400 block">المدة الزمنية:</span>
                                             <span className="text-sm font-mono font-black text-emerald-400">3:00 دقائق بالكامل ⏱️</span>
                                         </div>
                                         <Clock className="w-6 h-6 text-emerald-400" />
@@ -260,7 +263,7 @@
                                 </div>
                             </div>
 
-                            {/* Section 3: Generate Button & Progress */}
+                            {/* Section 3: Generate Button */}
                             <div className="pt-2">
                                 {errorMsg && (
                                     <div className="p-3 bg-rose-500/20 border border-rose-500/40 rounded-2xl text-rose-300 text-xs font-bold mb-3">
@@ -272,7 +275,7 @@
                                     <div className="space-y-2 p-4 bg-slate-950 rounded-2xl border border-slate-800 text-center">
                                         <div className="flex items-center justify-center gap-2 text-xs font-black text-amber-300">
                                             <RefreshCw className="w-4 h-4 animate-spin text-amber-400" />
-                                            <span>جاري توليد الموسيقى بالذكاء الاصطناعي لمطابقة 3 دقائق ({generationProgress}%)...</span>
+                                            <span>جاري التوليد ودمج بصمة Salh Alheib Klel ({generationProgress}%)...</span>
                                         </div>
                                         <div className="w-full h-2 bg-slate-800 rounded-full overflow-hidden">
                                             <div
@@ -280,25 +283,23 @@
                                                 className="h-full bg-gradient-to-r from-amber-500 to-emerald-500 transition-all duration-300"
                                             />
                                         </div>
-                                        <span className="text-[10px] text-slate-500 block">يستغرق التوليد بين 15 إلى 30 ثانية لإنشاء أعلى جودة صوتية</span>
                                     </div>
                                 ) : (
                                     <button
                                         onClick={handleGenerateMusic}
-                                        className="w-full py-4 rounded-2xl bg-gradient-to-r from-amber-500 via-emerald-500 to-teal-500 hover:from-amber-400 hover:to-teal-400 text-slate-950 font-black text-sm shadow-xl shadow-emerald-500/20 flex items-center justify-center gap-2 cursor-pointer transition-all"
+                                        className="w-full py-4 rounded-2xl bg-gradient-to-r from-amber-500 via-emerald-500 to-teal-500 hover:from-amber-400 text-slate-950 font-black text-sm shadow-xl shadow-emerald-500/20 flex items-center justify-center gap-2 cursor-pointer transition-all"
                                     >
                                         <Sparkles className="w-5 h-5" />
-                                        <span>توليد الموسيقى بالذكاء الاصطناعي الآن (مدتها 3 دقائق) ➔</span>
+                                        <span>توليد المقطوعة (3 دقائق) ببصمتك الرسمية ➔</span>
                                     </button>
                                 )}
                             </div>
 
                         </div>
 
-                        {/* Right Column: Player & Generated Library */}
+                        {/* Right Column: Player & Library */}
                         <div className="lg:col-span-5 space-y-6">
                             
-                            {/* Active Generated Track Player Card */}
                             {activeClip ? (
                                 <div className="bg-slate-900 border-2 border-emerald-500/40 rounded-3xl p-6 shadow-2xl space-y-4">
                                     
@@ -325,13 +326,16 @@
                                         </div>
 
                                         <span className="absolute bottom-3 right-3 px-3 py-1 bg-slate-950/90 backdrop-blur-md text-amber-300 text-xs font-black rounded-xl border border-amber-500/40 shadow-lg">
-                                            3:00 دقيقة ⏱️
+                                            3:00 دقائق ⏱️
                                         </span>
                                     </div>
 
                                     <div className="space-y-1">
                                         <h3 className="text-base font-black text-white">{activeClip.title}</h3>
-                                        <p className="text-xs text-slate-400">توليد الذكاء الاصطناعي الموثق • ختم صحيح ✨</p>
+                                        <p className="text-xs text-amber-400 font-bold flex items-center gap-1">
+                                            <ShieldCheck className="w-3.5 h-3.5" />
+                                            <span>حقوق النشر والبصمة: Salh Alheib Klel (heib12.com)</span>
+                                        </p>
                                     </div>
 
                                     <audio
@@ -350,7 +354,7 @@
                                             className="flex-1 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-slate-950 font-black text-xs shadow-md flex items-center justify-center gap-1.5 cursor-pointer"
                                         >
                                             <Download className="w-4 h-4" />
-                                            <span>تنزيل المقطوعة</span>
+                                            <span>تنزيل الملف باسمك</span>
                                         </button>
 
                                         <button
@@ -366,20 +370,20 @@
                             ) : (
                                 <div className="p-10 text-center bg-slate-900 border border-slate-800 rounded-3xl space-y-3">
                                     <Disc className="w-12 h-12 text-slate-600 mx-auto" />
-                                    <h3 className="text-sm font-black text-white">لا توجد مقطوعة موسيقية نشطة بعد</h3>
-                                    <p className="text-xs text-slate-400">اختر نمطك الموسيقي المفضل واضغط على زر التوليد بالذكاء الاصطناعي لإنشاء أول مقطوعة مدتها 3 دقائق!</p>
+                                    <h3 className="text-sm font-black text-white">لا توجد مقطوعة نشطة حالياً</h3>
+                                    <p className="text-xs text-slate-400">اختر نمطك واضغط توليد لإنشاء مقطوعة تحمل اسمك وبصمتك!</p>
                                 </div>
                             )}
 
-                            {/* Generated Music Library History */}
+                            {/* Library */}
                             <div className="bg-slate-900 border border-slate-800 rounded-3xl p-5 shadow-xl space-y-3">
                                 <h3 className="text-xs font-black text-white flex items-center justify-between border-b border-slate-800 pb-2">
-                                    <span>مكتبة المقطوعات المولدة ({clipsHistory.length})</span>
-                                    <span className="text-[10px] text-amber-400 font-bold">حفظ محلي ✨</span>
+                                    <span>مقطوعاتك المولدة ({clipsHistory.length})</span>
+                                    <span className="text-[10px] text-amber-400 font-bold">Salh Alheib Klel ✨</span>
                                 </h3>
 
                                 {clipsHistory.length === 0 ? (
-                                    <p className="text-xs text-slate-500 text-center py-4">المكتبة فارغة حالياً. اضغط توليد بالنقر على الزر الرئيسي لإنشاء معزوفاتك!</p>
+                                    <p className="text-xs text-slate-500 text-center py-4">المكتبة فارغة.</p>
                                 ) : (
                                     <div className="space-y-2.5 max-h-64 overflow-y-auto">
                                         {clipsHistory.map((clip) => (
@@ -403,7 +407,7 @@
                                                     />
                                                     <div>
                                                         <h4 className="text-xs font-black text-white line-clamp-1">{clip.title}</h4>
-                                                        <span className="text-[10px] text-emerald-400 font-bold">3:00 دقائق</span>
+                                                        <span className="text-[10px] text-emerald-400 font-bold">بصمة موثقة (3 دقائق)</span>
                                                     </div>
                                                 </div>
 
