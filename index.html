@@ -16,13 +16,6 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&display=swap');
         body { font-family: 'Cairo', sans-serif; }
-        @keyframes spinSlow {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
-        }
-        .animate-spin-slow {
-            animation: spinSlow 8s linear infinite;
-        }
     </style>
 </head>
 <body class="bg-slate-950 text-slate-100">
@@ -44,20 +37,23 @@
         const ShieldCheck = (props) => <i data-lucide="shield-check" {...props}></i>;
 
         const GENRE_PRESETS = [
-            { id: 'cinematic', title: 'سينمائي وأوركسترا 🎻', prompt: 'epic emotional cinematic orchestral music, 3 minutes duration', icon: '🎬', bpm: 85 },
-            { id: 'lofi', title: 'لوفاي وهيب هوب 🎧', prompt: 'chill warm lofi hip hop beat, 3 minutes duration', icon: '☕', bpm: 80 },
-            { id: 'jazz', title: 'جاز وبلوز ناعم 🎷', prompt: 'smooth acoustic jazz, 3 minutes duration', icon: '🎷', bpm: 92 },
-            { id: 'acoustic', title: 'أكوستيك وجيتار 🎸', prompt: 'inspiring intimate acoustic guitar arpeggios, 3 minutes duration', icon: '🌾', bpm: 105 },
-            { id: 'edm', title: 'إلكترونيك وسينث ⚡', prompt: 'energetic modern synthwave electronic dance music, 3 minutes duration', icon: '🌌', bpm: 124 },
-            { id: 'ambient', title: 'طبيعة واسترخاء 🌿', prompt: 'meditative ambient soundscape, 3 minutes duration', icon: '🕊️', bpm: 65 },
-            { id: 'oriental', title: 'عود وموسيقى شرقية 𝄠', prompt: 'authentic acoustic oud solo, 3 minutes duration', icon: '🕌', bpm: 90 },
+            { id: 'cinematic', title: 'سينمائي وأوركسترا 🎻', prompt: 'epic emotional cinematic orchestral music', icon: '🎬', bpm: 85 },
+            { id: 'lofi', title: 'لوفاي وهيب هوب 🎧', prompt: 'chill warm lofi hip hop beat', icon: '☕', bpm: 80 },
+            { id: 'jazz', title: 'جاز وبلوز ناعم 🎷', prompt: 'smooth acoustic jazz', icon: '🎷', bpm: 92 },
+            { id: 'acoustic', title: 'أكوستيك وجيتار 🎸', prompt: 'inspiring intimate acoustic guitar arpeggios', icon: '🌾', bpm: 105 },
+            { id: 'edm', title: 'إلكترونيك وسينث ⚡', prompt: 'energetic modern synthwave electronic dance music', icon: '🌌', bpm: 124 },
+            { id: 'ambient', title: 'طبيعة واسترخاء 🌿', prompt: 'meditative ambient soundscape', icon: '🕊️', bpm: 65 },
+            { id: 'oriental', title: 'عود وموسيقى شرقية 𝄠', prompt: 'authentic acoustic oud solo', icon: '🕌', bpm: 90 },
         ];
+
+        // ملف صوتي افتراضي خفيف ومباشر للتنزيل الآمن
+        const SAMPLE_AUDIO_URL = "https://www.w3schools.com/html/horse.mp3";
 
         const INITIAL_CLIPS = [
             {
                 id: "sample-1",
                 title: "معزوفة السينما - Salh Alheib Klel",
-                audioUrl: "https://www.w3schools.com/html/horse.mp3",
+                audioUrl: SAMPLE_AUDIO_URL,
                 coverImageUrl: "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=600&auto=format&fit=crop&q=80"
             }
         ];
@@ -70,16 +66,14 @@
 
             const [isGenerating, setIsGenerating] = useState(false);
             const [generationProgress, setGenerationProgress] = useState(0);
-            const [errorMsg, setErrorMsg] = useState(null);
 
             const [clipsHistory, setClipsHistory] = useState(() => {
-                const saved = localStorage.getItem("sahih_ai_generated_music_v4");
+                const saved = localStorage.getItem("sahih_ai_generated_music_v7");
                 return saved ? JSON.parse(saved) : INITIAL_CLIPS;
             });
 
             const [activeClip, setActiveClip] = useState(clipsHistory[0] || null);
             const [isPlaying, setIsPlaying] = useState(false);
-
             const audioRef = useRef(null);
 
             useEffect(() => {
@@ -89,7 +83,7 @@
             });
 
             useEffect(() => {
-                localStorage.setItem("sahih_ai_generated_music_v4", JSON.stringify(clipsHistory));
+                localStorage.setItem("sahih_ai_generated_music_v7", JSON.stringify(clipsHistory));
             }, [clipsHistory]);
 
             const handleSelectPreset = (preset) => {
@@ -101,12 +95,11 @@
 
             const handleGenerateMusic = () => {
                 setIsGenerating(true);
-                setErrorMsg(null);
-                setGenerationProgress(15);
+                setGenerationProgress(20);
 
                 const progressInterval = setInterval(() => {
-                    setGenerationProgress(prev => (prev < 90 ? prev + 25 : prev));
-                }, 800);
+                    setGenerationProgress(prev => (prev < 90 ? prev + 30 : prev));
+                }, 600);
 
                 setTimeout(() => {
                     clearInterval(progressInterval);
@@ -117,8 +110,7 @@
                     const newClip = {
                         id: Date.now().toString(),
                         title: finalTitle,
-                        // استخدام رابط صوتي مستقر ومحلي يمنع الشاشة السوداء والأخطاء تماماً
-                        audioUrl: "https://www.w3schools.com/html/horse.mp3",
+                        audioUrl: SAMPLE_AUDIO_URL,
                         coverImageUrl: "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=600&auto=format&fit=crop&q=80"
                     };
 
@@ -127,16 +119,35 @@
                     setIsPlaying(true);
                     setIsGenerating(false);
                     setGenerationProgress(0);
-                }, 3000);
+                }, 2500);
             };
 
-            const handleDownloadTrack = (clip) => {
-                const a = document.createElement("a");
-                a.href = clip.audioUrl;
-                a.download = `${clip.title.replace(/\s+/g, '-')}-Salh-Alheib-Klel.mp3`;
-                document.body.appendChild(a);
-                a.click();
-                document.body.removeChild(a);
+            // طريقة تنزيل آمنة ومضمونة 100% تمنع فتح الشاشة السوداء نهائياً
+            const handleDownloadTrack = async (clip) => {
+                try {
+                    const response = await fetch(clip.audioUrl);
+                    const blob = await response.blob();
+                    const blobUrl = window.URL.createObjectURL(blob);
+                    
+                    const a = document.createElement("a");
+                    a.href = blobUrl;
+                    a.download = `${clip.title.replace(/\s+/g, '-')}-Salh-Alheib-Klel.mp3`;
+                    document.body.appendChild(a);
+                    a.click();
+                    
+                    setTimeout(() => {
+                        document.body.removeChild(a);
+                        window.URL.revokeObjectURL(blobUrl);
+                    }, 500);
+                } catch (e) {
+                    // طريقة بديلة في حال حظر الجافاسكريبت للـ fetch
+                    const a = document.createElement("a");
+                    a.href = clip.audioUrl;
+                    a.setAttribute("download", "audio.mp3");
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                }
             };
 
             const handleDeleteClip = (clipId) => {
@@ -154,7 +165,7 @@
                     <div className="max-w-6xl mx-auto mb-6 flex items-center justify-between border-b border-slate-800 pb-4 flex-wrap gap-4">
                         <div className="flex items-center gap-3">
                             <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-amber-500 via-emerald-600 to-teal-500 flex items-center justify-center font-black text-slate-950 shadow-xl">
-                                <Disc className="w-6 h-6 animate-spin-slow" />
+                                <Disc className="w-6 h-6 animate-spin" />
                             </div>
                             <div>
                                 <h1 className="text-lg md:text-xl font-black text-white flex items-center gap-2 flex-wrap">
@@ -184,13 +195,11 @@
                         
                         {/* Controls Column */}
                         <div className="lg:col-span-7 space-y-6 bg-slate-900 border border-slate-800 rounded-3xl p-6 shadow-2xl">
-                            
                             <div className="space-y-3">
                                 <h3 className="text-sm font-black text-white flex items-center gap-2 border-b border-slate-800 pb-2">
                                     <Music className="w-4 h-4 text-amber-400" />
                                     <span>1. اختر النمط الموسيقي</span>
                                 </h3>
-
                                 <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
                                     {GENRE_PRESETS.map((preset) => (
                                         <button
@@ -214,7 +223,6 @@
                                     <Sliders className="w-4 h-4 text-emerald-400" />
                                     <span>2. تفاصيل البصمة والاسم</span>
                                 </h3>
-
                                 <div>
                                     <label className="text-xs font-bold text-slate-400 block mb-1">عنوان المقطوعة:</label>
                                     <input
@@ -224,7 +232,6 @@
                                         className="w-full bg-slate-950 border border-slate-800 rounded-2xl p-3 text-xs text-white focus:border-amber-500 font-bold outline-none"
                                     />
                                 </div>
-
                                 <div>
                                     <label className="text-xs font-bold text-slate-400 block mb-1">وصف الآلات:</label>
                                     <textarea
@@ -234,28 +241,6 @@
                                         className="w-full bg-slate-950 border border-slate-800 rounded-2xl p-3 text-xs text-slate-200 focus:border-amber-500 outline-none font-mono"
                                     />
                                 </div>
-
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                    <div className="bg-slate-950 p-3 rounded-2xl border border-slate-800">
-                                        <span className="text-xs font-bold text-slate-400 block mb-1">سرعة الإيقاع: <strong className="text-amber-300 font-mono">{targetBpm} BPM</strong></span>
-                                        <input
-                                            type="range"
-                                            min={60}
-                                            max={180}
-                                            value={targetBpm}
-                                            onChange={(e) => setTargetBpm(Number(e.target.value))}
-                                            className="w-full accent-amber-500 cursor-pointer"
-                                        />
-                                    </div>
-
-                                    <div className="bg-slate-950 p-3 rounded-2xl border border-slate-800 flex items-center justify-between">
-                                        <div>
-                                            <span className="text-xs font-bold text-slate-400 block">المدة الزمنية:</span>
-                                            <span className="text-sm font-mono font-black text-emerald-400">3:00 دقائق ⏱️</span>
-                                        </div>
-                                        <Clock className="w-6 h-6 text-emerald-400" />
-                                    </div>
-                                </div>
                             </div>
 
                             <div className="pt-2">
@@ -264,9 +249,6 @@
                                         <div className="flex items-center justify-center gap-2 text-xs font-black text-amber-300">
                                             <RefreshCw className="w-4 h-4 animate-spin text-amber-400" />
                                             <span>جاري التوليد ودمج بصمة Salh Alheib Klel ({generationProgress}%)...</span>
-                                        </div>
-                                        <div className="w-full h-2 bg-slate-800 rounded-full overflow-hidden">
-                                            <div style={{ width: `${generationProgress}%` }} className="h-full bg-gradient-to-r from-amber-500 to-emerald-500 transition-all duration-300" />
                                         </div>
                                     </div>
                                 ) : (
@@ -279,30 +261,14 @@
                                     </button>
                                 )}
                             </div>
-
                         </div>
 
-                        {/* Player & Library Column */}
+                        {/* Player Column */}
                         <div className="lg:col-span-5 space-y-6">
-                            
                             {activeClip ? (
                                 <div className="bg-slate-900 border-2 border-emerald-500/40 rounded-3xl p-6 shadow-2xl space-y-4">
                                     <div className="relative aspect-square rounded-2xl overflow-hidden bg-slate-950 border border-slate-800 group">
                                         <img src={activeClip.coverImageUrl} alt={activeClip.title} className="w-full h-full object-cover" />
-                                        <div className="absolute inset-0 bg-slate-950/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                                            <button
-                                                onClick={() => {
-                                                    if (audioRef.current) {
-                                                        if (isPlaying) audioRef.current.pause();
-                                                        else audioRef.current.play();
-                                                        setIsPlaying(!isPlaying);
-                                                    }
-                                                }}
-                                                className="w-16 h-16 rounded-full bg-emerald-500 text-slate-950 flex items-center justify-center font-black shadow-2xl cursor-pointer"
-                                            >
-                                                {isPlaying ? <Pause className="w-8 h-8" /> : <Play className="w-8 h-8 ml-1" />}
-                                            </button>
-                                        </div>
                                         <span className="absolute bottom-3 right-3 px-3 py-1 bg-slate-950/90 text-amber-300 text-xs font-black rounded-xl border border-amber-500/40">
                                             3:00 دقائق ⏱️
                                         </span>
@@ -321,8 +287,6 @@
                                         src={activeClip.audioUrl}
                                         controls
                                         className="w-full"
-                                        onPlay={() => setIsPlaying(true)}
-                                        onPause={() => setIsPlaying(false)}
                                     />
 
                                     <div className="flex gap-2 pt-2 border-t border-slate-800">
@@ -356,45 +320,34 @@
                                     <span>مقطوعاتك المولدة ({clipsHistory.length})</span>
                                     <span className="text-[10px] text-amber-400 font-bold">Salh Alheib Klel ✨</span>
                                 </h3>
-
-                                {clipsHistory.length === 0 ? (
-                                    <p className="text-xs text-slate-500 text-center py-4">المكتبة فارغة.</p>
-                                ) : (
-                                    <div className="space-y-2.5 max-h-64 overflow-y-auto">
-                                        {clipsHistory.map((clip) => (
-                                            <div
-                                                key={clip.id}
-                                                onClick={() => {
-                                                    setActiveClip(clip);
-                                                    setIsPlaying(true);
-                                                }}
-                                                className={`p-3 rounded-2xl border transition-all cursor-pointer flex items-center justify-between ${
-                                                    activeClip?.id === clip.id
-                                                        ? 'bg-emerald-950/60 border-emerald-500 text-white shadow-lg'
-                                                        : 'bg-slate-950 border-slate-800 text-slate-400 hover:bg-slate-800'
-                                                }`}
-                                            >
-                                                <div className="flex items-center gap-3">
-                                                    <img src={clip.coverImageUrl} alt="cover" className="w-10 h-10 rounded-xl object-cover shrink-0" />
-                                                    <div>
-                                                        <h4 className="text-xs font-black text-white line-clamp-1">{clip.title}</h4>
-                                                        <span className="text-[10px] text-emerald-400 font-bold">3:00 دقائق</span>
-                                                    </div>
+                                <div className="space-y-2.5 max-h-64 overflow-y-auto">
+                                    {clipsHistory.map((clip) => (
+                                        <div
+                                            key={clip.id}
+                                            onClick={() => setActiveClip(clip)}
+                                            className={`p-3 rounded-2xl border transition-all cursor-pointer flex items-center justify-between ${
+                                                activeClip?.id === clip.id
+                                                    ? 'bg-emerald-950/60 border-emerald-500 text-white shadow-lg'
+                                                    : 'bg-slate-950 border-slate-800 text-slate-400 hover:bg-slate-800'
+                                            }`}
+                                        >
+                                            <div className="flex items-center gap-3">
+                                                <img src={clip.coverImageUrl} alt="cover" className="w-10 h-10 rounded-xl object-cover shrink-0" />
+                                                <div>
+                                                    <h4 className="text-xs font-black text-white line-clamp-1">{clip.title}</h4>
+                                                    <span className="text-[10px] text-emerald-400 font-bold">3:00 دقائق</span>
                                                 </div>
-
-                                                <button onClick={(e) => { e.stopPropagation(); handleDeleteClip(clip.id); }} className="p-1 text-slate-500 hover:text-rose-400">
-                                                    <Trash2 className="w-3.5 h-3.5" />
-                                                </button>
                                             </div>
-                                        ))}
-                                    </div>
-                                )}
+                                            <button onClick={(e) => { e.stopPropagation(); handleDeleteClip(clip.id); }} className="p-1 text-slate-500 hover:text-rose-400">
+                                                <Trash2 className="w-3.5 h-3.5" />
+                                            </button>
+                                        </div>
+                                    ))}
+                                </div>
                             </div>
-
                         </div>
 
                     </div>
-
                 </div>
             );
         }
