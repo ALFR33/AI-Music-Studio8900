@@ -37,23 +37,20 @@
         const ShieldCheck = (props) => <i data-lucide="shield-check" {...props}></i>;
 
         const GENRE_PRESETS = [
-            { id: 'cinematic', title: 'سينمائي وأوركسترا 🎻', prompt: 'epic emotional cinematic orchestral music', icon: '🎬', bpm: 85 },
-            { id: 'lofi', title: 'لوفاي وهيب هوب 🎧', prompt: 'chill warm lofi hip hop beat', icon: '☕', bpm: 80 },
-            { id: 'jazz', title: 'جاز وبلوز ناعم 🎷', prompt: 'smooth acoustic jazz', icon: '🎷', bpm: 92 },
-            { id: 'acoustic', title: 'أكوستيك وجيتار 🎸', prompt: 'inspiring intimate acoustic guitar arpeggios', icon: '🌾', bpm: 105 },
-            { id: 'edm', title: 'إلكترونيك وسينث ⚡', prompt: 'energetic modern synthwave electronic dance music', icon: '🌌', bpm: 124 },
-            { id: 'ambient', title: 'طبيعة واسترخاء 🌿', prompt: 'meditative ambient soundscape', icon: '🕊️', bpm: 65 },
-            { id: 'oriental', title: 'عود وموسيقى شرقية 𝄠', prompt: 'authentic acoustic oud solo', icon: '🕌', bpm: 90 },
+            { id: 'cinematic', title: 'سينمائي وأوركسترا 🎻', prompt: 'epic emotional cinematic orchestral music, 3 minutes duration', icon: '🎬', bpm: 85, audio: 'https://actions.google.com/sounds/v1/ambiences/rain_heavy.ogg' },
+            { id: 'lofi', title: 'لوفاي وهيب هوب 🎧', prompt: 'chill warm lofi hip hop beat, 3 minutes duration', icon: '☕', bpm: 80, audio: 'https://actions.google.com/sounds/v1/ambiences/coffee_shop.ogg' },
+            { id: 'jazz', title: 'جاز وبلوز ناعم 🎷', prompt: 'smooth acoustic jazz, 3 minutes duration', icon: '🎷', bpm: 92, audio: 'https://actions.google.com/sounds/v1/ambiences/daytime_forest_bonfire.ogg' },
+            { id: 'acoustic', title: 'أكوستيك وجيتار 🎸', prompt: 'inspiring intimate acoustic guitar arpeggios, 3 minutes duration', icon: '🌾', bpm: 105, audio: 'https://actions.google.com/sounds/v1/ambiences/country_night.ogg' },
+            { id: 'edm', title: 'إلكترونيك وسينث ⚡', prompt: 'energetic modern synthwave electronic dance music, 3 minutes duration', icon: '🌌', bpm: 124, audio: 'https://actions.google.com/sounds/v1/science_fiction/teleport.ogg' },
+            { id: 'ambient', title: 'طبيعة واسترخاء 🌿', prompt: 'meditative ambient soundscape, 3 minutes duration', icon: '🕊️', bpm: 65, audio: 'https://actions.google.com/sounds/v1/weather/rain_heavy_loud.ogg' },
+            { id: 'oriental', title: 'عود وموسيقى شرقية 𝄠', prompt: 'authentic acoustic oud solo, 3 minutes duration', icon: '🕌', bpm: 90, audio: 'https://actions.google.com/sounds/v1/ambiences/desert_wind.ogg' },
         ];
-
-        // ملف صوتي افتراضي خفيف ومباشر للتنزيل الآمن
-        const SAMPLE_AUDIO_URL = "https://www.w3schools.com/html/horse.mp3";
 
         const INITIAL_CLIPS = [
             {
                 id: "sample-1",
                 title: "معزوفة السينما - Salh Alheib Klel",
-                audioUrl: SAMPLE_AUDIO_URL,
+                audioUrl: GENRE_PRESETS[0].audio,
                 coverImageUrl: "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=600&auto=format&fit=crop&q=80"
             }
         ];
@@ -68,7 +65,7 @@
             const [generationProgress, setGenerationProgress] = useState(0);
 
             const [clipsHistory, setClipsHistory] = useState(() => {
-                const saved = localStorage.getItem("sahih_ai_generated_music_v7");
+                const saved = localStorage.getItem("sahih_ai_generated_music_v8");
                 return saved ? JSON.parse(saved) : INITIAL_CLIPS;
             });
 
@@ -83,7 +80,7 @@
             });
 
             useEffect(() => {
-                localStorage.setItem("sahih_ai_generated_music_v7", JSON.stringify(clipsHistory));
+                localStorage.setItem("sahih_ai_generated_music_v8", JSON.stringify(clipsHistory));
             }, [clipsHistory]);
 
             const handleSelectPreset = (preset) => {
@@ -110,7 +107,7 @@
                     const newClip = {
                         id: Date.now().toString(),
                         title: finalTitle,
-                        audioUrl: SAMPLE_AUDIO_URL,
+                        audioUrl: selectedPreset.audio, // ربط المقطوعة بالمعزوفة الخاصة بالنمط المختار
                         coverImageUrl: "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=600&auto=format&fit=crop&q=80"
                     };
 
@@ -122,7 +119,6 @@
                 }, 2500);
             };
 
-            // طريقة تنزيل آمنة ومضمونة 100% تمنع فتح الشاشة السوداء نهائياً
             const handleDownloadTrack = async (clip) => {
                 try {
                     const response = await fetch(clip.audioUrl);
@@ -140,7 +136,6 @@
                         window.URL.revokeObjectURL(blobUrl);
                     }, 500);
                 } catch (e) {
-                    // طريقة بديلة في حال حظر الجافاسكريبت للـ fetch
                     const a = document.createElement("a");
                     a.href = clip.audioUrl;
                     a.setAttribute("download", "audio.mp3");
@@ -175,7 +170,7 @@
                                         <span>بصمة رسمية ✨</span>
                                     </span>
                                 </h1>
-                                <p className="text-xs text-slate-400">توليد معزوفات احترافية كاملة (3 دقائق) ببصمتك الرسمية واسم موقعك</p>
+                                <p className="text-xs text-slate-400">توليد معزوفات ومقاطع صوتية استرخائية متكاملة ببصمتك الرسمية</p>
                             </div>
                         </div>
 
@@ -233,7 +228,7 @@
                                     />
                                 </div>
                                 <div>
-                                    <label className="text-xs font-bold text-slate-400 block mb-1">وصف الآلات:</label>
+                                    <label className="text-xs font-bold text-slate-400 block mb-1">وصف الآلات والجو:</label>
                                     <textarea
                                         value={customPrompt}
                                         onChange={(e) => setCustomPrompt(e.target.value)}
@@ -248,7 +243,7 @@
                                     <div className="space-y-2 p-4 bg-slate-950 rounded-2xl border border-slate-800 text-center">
                                         <div className="flex items-center justify-center gap-2 text-xs font-black text-amber-300">
                                             <RefreshCw className="w-4 h-4 animate-spin text-amber-400" />
-                                            <span>جاري التوليد ودمج بصمة Salh Alheib Klel ({generationProgress}%)...</span>
+                                            <span>جاري توليد المعزوفة ودمج بصمة Salh Alheib Klel ({generationProgress}%)...</span>
                                         </div>
                                     </div>
                                 ) : (
@@ -257,7 +252,7 @@
                                         className="w-full py-4 rounded-2xl bg-gradient-to-r from-amber-500 via-emerald-500 to-teal-500 text-slate-950 font-black text-sm shadow-xl flex items-center justify-center gap-2 cursor-pointer"
                                     >
                                         <Sparkles className="w-5 h-5" />
-                                        <span>توليد المقطوعة (3 دقائق) ببصمتك الرسمية ➔</span>
+                                        <span>توليد المعزوفة الموسيقية ببصمتك الرسمية ➔</span>
                                     </button>
                                 )}
                             </div>
@@ -270,7 +265,7 @@
                                     <div className="relative aspect-square rounded-2xl overflow-hidden bg-slate-950 border border-slate-800 group">
                                         <img src={activeClip.coverImageUrl} alt={activeClip.title} className="w-full h-full object-cover" />
                                         <span className="absolute bottom-3 right-3 px-3 py-1 bg-slate-950/90 text-amber-300 text-xs font-black rounded-xl border border-amber-500/40">
-                                            3:00 دقائق ⏱️
+                                            مقطوعة موسيقية 🎵
                                         </span>
                                     </div>
 
@@ -335,7 +330,7 @@
                                                 <img src={clip.coverImageUrl} alt="cover" className="w-10 h-10 rounded-xl object-cover shrink-0" />
                                                 <div>
                                                     <h4 className="text-xs font-black text-white line-clamp-1">{clip.title}</h4>
-                                                    <span className="text-[10px] text-emerald-400 font-bold">3:00 دقائق</span>
+                                                    <span className="text-[10px] text-emerald-400 font-bold">معزوفة موسيقية</span>
                                                 </div>
                                             </div>
                                             <button onClick={(e) => { e.stopPropagation(); handleDeleteClip(clip.id); }} className="p-1 text-slate-500 hover:text-rose-400">
