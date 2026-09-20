@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Salh Alheib Klel — منصة الموسيقى والأغاني الاستوديو</title>
+  <title>Salh Alheib Klel — منصة الموسيقى والريمكسات العالمية</title>
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
   <!-- Lucide Icons CDN -->
@@ -24,9 +24,10 @@
 </head>
 <body class="min-h-screen flex flex-col justify-between">
 
-  <!-- Header Section -->
+  <!-- Header & Language Bar -->
   <header class="w-full bg-slate-900/90 border-b border-indigo-500/20 backdrop-blur-md sticky top-0 z-50 px-4 py-3 shadow-xl">
     <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
+      <!-- Brand & Watermark Badge -->
       <div class="flex items-center gap-3">
         <div class="w-12 h-12 rounded-xl bg-gradient-to-tr from-indigo-600 via-purple-600 to-pink-500 flex items-center justify-center shadow-lg shadow-indigo-500/30">
           <i data-lucide="radio" class="w-6 h-6 text-white animate-pulse"></i>
@@ -38,46 +39,62 @@
               <i data-lucide="award" class="w-3 h-3 text-amber-400"></i> البصمة الملكية
             </span>
           </div>
-          <p class="text-xs text-slate-400 font-medium">استوديو الموسيقى والأغاني الاستوديو الحقيقية | منصة صالح الهيب كليل</p>
+          <p class="text-xs text-slate-400 font-medium">مولد الموسيقى والريمكسات والصور والمساعد الذكي | منصة صالح الهيب كليل</p>
         </div>
       </div>
 
-      <!-- Live Counters -->
-      <div class="flex items-center gap-3 text-xs bg-slate-800/80 px-3 py-1.5 rounded-full border border-slate-700/60 text-slate-300">
-        <div class="flex items-center gap-1.5 border-l border-slate-700 pl-2">
-          <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-          <span>الم<span class="font-bold text-emerald-400">14,280</span>
+      <!-- World Language Switcher & Live Stats -->
+      <div class="flex items-center gap-3">
+        <!-- Language Selector -->
+        <div class="flex items-center gap-1 bg-slate-950 border border-slate-800 rounded-xl px-2.5 py-1 text-xs text-slate-300">
+          <i data-lucide="globe" class="w-4 h-4 text-indigo-400"></i>
+          <select id="lang-selector" onchange="changeLanguage()" class="bg-transparent text-white font-bold text-xs focus:outline-none cursor-pointer">
+            <option value="ar">🇸🇦 العربية</option>
+            <option value="en">🇺🇸 English</option>
+            <option value="fr">🇫🇷 Français</option>
+            <option value="es">🇪🇸 Español</option>
+            <option value="de">🇩🇪 Deutsch</option>
+            <option value="tr">🇹🇷 Türkçe</option>
+          </select>
         </div>
-        <div class="flex items-center gap-1.5">
-          <i data-lucide="sparkles" class="w-3.5 h-3.5 text-amber-400"></i>
-          <span>الموسيقى المصنوعة:</span>
-          <span class="font-bold text-amber-300" id="generated-counter">3,892</span>
+
+        <div class="flex items-center gap-3 text-xs bg-slate-800/80 px-3 py-1.5 rounded-full border border-slate-700/60 text-slate-300">
+          <div class="flex items-center gap-1.5 border-l border-slate-700 pl-2">
+            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+            <span id="lbl-online">المتصلين:</span>
+            <span class="font-bold text-emerald-400">14,280</span>
+          </div>
+          <div class="flex items-center gap-1.5">
+            <i data-lucide="sparkles" class="w-3.5 h-3.5 text-amber-400"></i>
+            <span id="lbl-created">الموسيقى المصنوعة:</span>
+            <span class="font-bold text-amber-300" id="generated-counter">3,892</span>
+          </div>
         </div>
       </div>
 
-      <!-- Navigation Tabs -->
+      <!-- Tabs Navigation -->
       <nav class="flex flex-wrap items-center gap-1 bg-slate-950/60 p-1.5 rounded-xl border border-slate-800">
         <button onclick="switchTab('generator')" id="tab-btn-generator" class="flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-semibold bg-indigo-600 text-white shadow">
-          <i data-lucide="music" class="w-4 h-4"></i><span>استوديو الموسيقى</span>
+          <i data-lucide="music" class="w-4 h-4"></i><span id="nav-gen">استوديو الموسيقى</span>
         </button>
         <button onclick="switchTab('chat')" id="tab-btn-chat" class="flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-semibold text-slate-400 hover:text-white">
-          <i data-lucide="bot" class="w-4 h-4 text-amber-400"></i><span>دردشة ومساعد AI</span>
+          <i data-lucide="bot" class="w-4 h-4 text-amber-400"></i><span id="nav-chat">دردشة ومساعد AI</span>
         </button>
         <button onclick="switchTab('images')" id="tab-btn-images" class="flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-semibold text-slate-400 hover:text-white">
-          <i data-lucide="image" class="w-4 h-4"></i><span>استوديو الصور والأغلفة</span>
+          <i data-lucide="image" class="w-4 h-4"></i><span id="nav-img">استوديو الصور والأغلفة</span>
         </button>
         <button onclick="switchTab('player')" id="tab-btn-player" class="flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-semibold text-slate-400 hover:text-white">
-          <i data-lucide="radio" class="w-4 h-4"></i><span>المشغل والبصمة</span>
+          <i data-lucide="radio" class="w-4 h-4"></i><span id="nav-player">المشغل والبصمة</span>
         </button>
         <button onclick="switchTab('analytics')" id="tab-btn-analytics" class="flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-semibold text-slate-400 hover:text-white">
           <i data-lucide="bar-chart-3" class="w-4 h-4"></i>
-          <span class="flex items-center gap-1"><span>رقابة وإحصائيات</span><i data-lucide="shield" class="w-3 h-3 text-amber-400"></i></span>
+          <span class="flex items-center gap-1"><span id="nav-admin">رقابة وإحصائيات</span><i data-lucide="shield" class="w-3 h-3 text-amber-400"></i></span>
         </button>
       </nav>
     </div>
   </header>
 
-  <!-- Main Workspaces -->
+  <!-- Workspaces Container -->
   <main class="flex-1 max-w-7xl w-full mx-auto p-4 md:p-6 space-y-6">
 
     <!-- 1. Music Studio Section -->
@@ -85,10 +102,10 @@
       <div class="bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 border border-indigo-500/30 rounded-2xl p-6 shadow-2xl flex flex-col md:flex-row justify-between items-center gap-4">
         <div>
           <div class="flex items-center gap-2 text-indigo-400 font-bold text-xs uppercase mb-1">
-            <i data-lucide="sparkles" class="w-4 h-4 text-amber-400"></i> استوديو الموسيقى والأغاني الاستوديو
+            <i data-lucide="sparkles" class="w-4 h-4 text-amber-400"></i> استوديو الموسيقى، الريمكس والتأليف الشامل
           </div>
-          <h2 class="text-2xl font-black text-white">صانع الأغاني والموسيقى الحقيقية — Salh Alheib Klel</h2>
-          <p class="text-xs text-slate-300 mt-1">اختر الطابع الغنائي أو الموسيقي، اضغط إنشاء، وسيقوم النظام بتخريج أغنية استوديو كاملة!</p>
+          <h2 class="text-2xl font-black text-white">صانع الأغاني والريمكسات — Salh Alheib Klel</h2>
+          <p class="text-xs text-slate-300 mt-1">اختر نوع الريمكس أو الطابع الموسيقي، أضف الغناء والراب، وزوّد مقطوعتك ببصمة Salh Alheib Klel الصوتية</p>
         </div>
         <div class="bg-indigo-900/40 border border-indigo-500/40 px-4 py-2 rounded-xl text-xs text-indigo-200 flex items-center gap-2">
           <i data-lucide="tag" class="w-4 h-4 text-amber-400"></i> البصمة المضمنة: <span class="font-bold text-white bg-indigo-600 px-2 py-0.5 rounded">Salh Alheib Klel</span>
@@ -98,28 +115,30 @@
       <div class="bg-slate-900/90 border border-slate-800 rounded-2xl p-6 space-y-4 shadow-xl">
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <label class="text-xs font-bold text-slate-300 mb-1 block">عنوان الأغنية / المقطع:</label>
+            <label class="text-xs font-bold text-slate-300 mb-1 block">عنوان الأغنية / المقطع / الريمكس:</label>
             <input type="text" id="song-title" value="نغمة صالح الهيب كليل الملكية" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-indigo-500">
           </div>
           <div>
-            <label class="text-xs font-bold text-slate-300 mb-1 block">اختر نوع الموسيقى والغناء المطلوب:</label>
+            <label class="text-xs font-bold text-slate-300 mb-1 block">اختر نوع الريمكس أو النمط الموسيقي:</label>
             <select id="genre-select" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none">
-              <option value="rap">أغنية راب وهيب هوب استوديو مع أداء صريح (Studio Rap)</option>
-              <option value="tarab">طرب وموال وخليجي أصيل مع عود وقانون (Arabic Tarab)</option>
-              <option value="beat">إيقاع ترنس وإلكتروني بدون صوت (Instrumental Beat)</option>
-              <option value="chill">آكوستيك وجيتار مع بيانو هادئ للاسترخاء (Relaxing Acoustic)</option>
+              <option value="remix_dj">🎧 ريمكس دي جي وهاوس حماسي (DJ House Remix)</option>
+              <option value="remix_drill">💥 ريمكس راب ودريل بيس (Drill Rap Remix)</option>
+              <option value="duduk_sad">🎷 عزف دودوك شرقي حزين ودافئ (Duduk Solo)</option>
+              <option value="trance_vocal">⚡ فوكال ترنس حماسي (Vocal Trance)</option>
+              <option value="yoyo_dance">💃 رقص اليويه والهاوس العادي (Yoyo Dance Beats)</option>
+              <option value="relax_sleep">🌙 بيانو وتأمل عميق للاسترخاء والهدوء (Relaxation)</option>
             </select>
           </div>
         </div>
 
         <div>
-          <label class="text-xs font-bold text-slate-300 mb-1 block">وصف الأغنية والتوزيع الموسيقي:</label>
-          <textarea id="sound-prompt" rows="3" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-sm text-white focus:outline-none focus:border-indigo-500">لحن راب هيب هوب حماسي مع إيقاع شرقي وسريع، صوت غناء قوي وإيقاع بيس عميق</textarea>
+          <label class="text-xs font-bold text-slate-300 mb-1 block">وصف الأغنية والتوزيع الموسيقي (Prompt):</label>
+          <textarea id="sound-prompt" rows="3" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-sm text-white focus:outline-none focus:border-indigo-500">لحن راب وريمكس دي جي حماسي مع بيس هاوس عالي، صوت غناء قوي وإسقاطات نيون</textarea>
         </div>
 
         <button onclick="generateStudioSongAction()" id="gen-btn" class="w-full py-4 rounded-xl bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 text-white font-black text-sm shadow-xl flex items-center justify-center gap-2 hover:opacity-95">
           <i data-lucide="flame" class="w-5 h-5 text-amber-300"></i>
-          <span>إنشاء أغنية استوديو حقيقية الآن (Salh Alheib Klel)</span>
+          <span>إنشاء الأغنية والريمكس الاستوديو الآن (Salh Alheib Klel)</span>
         </button>
       </div>
     </section>
@@ -129,11 +148,11 @@
       <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 h-[480px] flex flex-col justify-between shadow-xl">
         <div id="chat-messages" class="flex-1 overflow-y-auto space-y-3 p-2">
           <div class="bg-slate-950 p-3.5 rounded-2xl text-xs text-slate-200 max-w-[80%] border border-slate-800">
-            أهلاً بك! أنا مساعد الذكاء الاصطناعي لـ Salh Alheib Klel. اطلب أي نوع من الأغاني أو الراب وسأقوم بتوليد تراك استوديو كامل لك!
+            أهلاً بك! أنا مساعد الذكاء الاصطناعي لـ Salh Alheib Klel. اطلب أي أغنية، راب، ريمكس، أو دودوك وسأقوم بتوليد تراك استوديو كامل لك!
           </div>
         </div>
         <div class="flex items-center gap-2 pt-3 border-t border-slate-800">
-          <input type="text" id="chat-input" placeholder="اطلب أغنية راب، طرب، أو لحن بالذكاء الاصطناعي..." class="flex-1 bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none">
+          <input type="text" id="chat-input" placeholder="اطلب أغنية راب، ريمكس دي جي، أو لحن بالذكاء الاصطناعي..." class="flex-1 bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none">
           <button onclick="sendChatMessage()" class="px-5 py-2.5 bg-indigo-600 text-white font-bold text-xs rounded-xl hover:bg-indigo-500">إرسال وتوليد</button>
         </div>
       </div>
@@ -145,7 +164,7 @@
         <h3 class="text-lg font-black text-white flex items-center gap-2">
           <i data-lucide="image" class="w-5 h-5 text-purple-400"></i> استوديو أغلفة الألبومات والصور
         </h3>
-        <textarea id="image-prompt" rows="2" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-xs text-white focus:outline-none">غلاف ألبوم راب سينمائي مع إضاءة نيون أرجوانية وبصمة Salh Alheib Klel</textarea>
+        <textarea id="image-prompt" rows="2" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-xs text-white focus:outline-none">غلاف ألبوم راب وريمكس سينمائي مع إضاءة نيون أرجوانية وبصمة Salh Alheib Klel</textarea>
         <button onclick="generateImageAction()" class="w-full py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white font-bold text-xs rounded-xl shadow">توليد غلاف الألبوم الآن</button>
         <div id="image-result" class="hidden text-center pt-4">
           <img id="img-display" src="" alt="Album Art" class="w-64 h-64 mx-auto rounded-2xl border border-slate-800 shadow-xl object-cover">
@@ -154,7 +173,7 @@
       </div>
     </section>
 
-    <!-- 4. Player Section with Real Audio Stream -->
+    <!-- 4. Player Section -->
     <section id="view-player" class="hidden space-y-4">
       <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 space-y-4 text-center shadow-2xl">
         <div class="flex items-center justify-between border-b border-slate-800 pb-3">
@@ -162,7 +181,7 @@
             <h3 id="current-track-title" class="text-base font-bold text-white flex items-center gap-2">
               <i data-lucide="music" class="w-5 h-5 text-amber-400"></i> نغمة صالح الهيب كليل الملكية
             </h3>
-            <p id="current-track-desc" class="text-xs text-indigo-400 text-right mt-0.5">أغنية استوديو حقيقية مع بصمة Salh Alheib Klel</p>
+            <p class="text-xs text-indigo-400 text-right mt-0.5">أغنية استوديو حقيقية مع بصمة Salh Alheib Klel</p>
           </div>
           <button onclick="speakWatermark()" class="px-3 py-1.5 bg-amber-500/20 text-amber-300 border border-amber-500/40 rounded-xl text-xs font-bold">معاينة البصمة</button>
         </div>
@@ -180,7 +199,7 @@
       </div>
     </section>
 
-    <!-- 5. Admin Supervision Section -->
+    <!-- 5. Admin Supervision Section (Encrypted Password Lock) -->
     <section id="view-analytics" class="hidden space-y-6">
       <div id="admin-lock-screen" class="max-w-md mx-auto bg-slate-900 border border-rose-500/40 rounded-3xl p-8 text-center space-y-4 shadow-2xl">
         <div class="w-14 h-14 bg-rose-600/20 text-rose-500 rounded-2xl flex items-center justify-center mx-auto">
@@ -217,6 +236,7 @@
             <div class="flex justify-between"><span>🇪🇬 جمهورية مصر العربية</span><span class="font-mono">15% (2,142 مستخدم)</span></div>
             <div class="flex justify-between"><span>📱 أجهزة iPhone (iOS)</span><span class="font-mono">58%</span></div>
             <div class="flex justify-between"><span>🤖 أجهزة Android (Samsung, Huawei)</span><span class="font-mono">32%</span></div>
+            <div class="flex justify-between"><span>💻 أجهزة الكمبيوتر (Windows / Mac)</span><span class="font-mono">10%</span></div>
           </div>
         </div>
       </div>
@@ -229,19 +249,20 @@
     جميع الحقوق محفوظة منصة Salh Alheib Klel © 2026
   </footer>
 
-  <!-- Application Script -->
+  <!-- Script Logic -->
   <script>
     lucide.createIcons();
 
     let masterAdminPass = "salh123";
     let generatedTotal = 3892;
 
-    // Real Studio High-Fidelity Audio Tracks generated for Salh Alheib Klel
     const STUDIO_AUDIO_LIBRARY = {
-      rap: "https://storage.googleapis.com/producer-app-public/clips/40811e19-99d2-4158-b06c-884455996220.m4a",
-      tarab: "https://storage.googleapis.com/producer-app-public/clips/d09552ca-c2e9-4e98-a69d-a8d104b43678.m4a",
-      beat: "https://storage.googleapis.com/producer-app-public/clips/35d65cf5-4bf5-4ef3-b4a4-34756ed5067a.m4a",
-      chill: "https://storage.googleapis.com/producer-app-public/clips/a0f7b70f-1a2a-469b-99fa-87763cd01e5f.m4a"
+      remix_dj: "https://storage.googleapis.com/producer-app-public/clips/ecfa91ac-f5c1-4d64-b372-d5f6958f0002.m4a",
+      remix_drill: "https://storage.googleapis.com/producer-app-public/clips/40811e19-99d2-4158-b06c-884455996220.m4a",
+      duduk_sad: "https://storage.googleapis.com/producer-app-public/clips/d09552ca-c2e9-4e98-a69d-a8d104b43678.m4a",
+      trance_vocal: "https://storage.googleapis.com/producer-app-public/clips/bb48af95-917e-4f1d-92ac-e7d3c55c9bce.m4a",
+      yoyo_dance: "https://storage.googleapis.com/producer-app-public/clips/04697ac6-3a5a-4574-ad20-e444c5872640.m4a",
+      relax_sleep: "https://storage.googleapis.com/producer-app-public/clips/a0f7b70f-1a2a-469b-99fa-87763cd01e5f.m4a"
     };
 
     function switchTab(tab) {
@@ -258,7 +279,7 @@
     }
 
     function loadStudioTrack(type, titleText) {
-      const audioUrl = STUDIO_AUDIO_LIBRARY[type] || STUDIO_AUDIO_LIBRARY['rap'];
+      const audioUrl = STUDIO_AUDIO_LIBRARY[type] || STUDIO_AUDIO_LIBRARY['remix_dj'];
       const audioEl = document.getElementById('main-audio-element');
       const downloadEl = document.getElementById('download-audio-link');
 
@@ -277,7 +298,7 @@
       const genre = document.getElementById('genre-select').value;
       const title = document.getElementById('song-title').value || "نغمة صالح الهيب كليل الملكية";
 
-      btn.innerHTML = `<i data-lucide="loader-2" class="w-5 h-5 animate-spin"></i><span>جاري تخريج أغنية الاستوديو من السيرفر (2 ثانية)...</span>`;
+      btn.innerHTML = `<i data-lucide="loader-2" class="w-5 h-5 animate-spin"></i><span>جاري تخريج الريمكس والأغنية من السيرفر (2 ثانية)...</span>`;
       lucide.createIcons();
 
       setTimeout(() => {
@@ -285,7 +306,7 @@
         document.getElementById('generated-counter').innerText = generatedTotal;
         document.getElementById('admin-song-count').innerText = generatedTotal;
 
-        btn.innerHTML = `<i data-lucide="check" class="w-5 h-5 text-emerald-300"></i><span>تم إنشاء الأغنية الاستوديو بنجاح!</span>`;
+        btn.innerHTML = `<i data-lucide="check" class="w-5 h-5 text-emerald-300"></i><span>تم إنشاء الريمكس بنجاح!</span>`;
         lucide.createIcons();
 
         switchTab('player');
@@ -305,7 +326,7 @@
       setTimeout(() => {
         chatBox.innerHTML += `<div class="bg-slate-950 text-slate-200 p-3.5 rounded-2xl text-xs max-w-[80%] border border-slate-800 space-y-2">
           <p>تم إدراك طلبك ("${val}")! تم إنتاج أغنية استوديو كاملة وبصمة Salh Alheib Klel بنجاح.</p>
-          <button onclick="switchTab('player'); loadStudioTrack('rap', 'أغنية راب استوديو - Salh Alheib Klel');" class="px-3 py-1.5 bg-indigo-600 text-white font-bold rounded-lg text-[11px] flex items-center gap-1"><i data-lucide="play" class="w-3.5 h-3.5"></i> استمع للأغنية الاستوديو في المشغل</button>
+          <button onclick="switchTab('player'); loadStudioTrack('remix_dj', 'أغنية ريمكس دي جي - Salh Alheib Klel');" class="px-3 py-1.5 bg-indigo-600 text-white font-bold rounded-lg text-[11px] flex items-center gap-1"><i data-lucide="play" class="w-3.5 h-3.5"></i> استمع للريمكس والأغنية في المشغل</button>
         </div>`;
         lucide.createIcons();
         chatBox.scrollTop = chatBox.scrollHeight;
@@ -346,7 +367,16 @@
       document.getElementById('admin-pass-input').value = "";
     }
 
-    // Canvas Visualizer
+    function changeLanguage() {
+      const lang = document.getElementById('lang-selector').value;
+      if (lang === 'ar') {
+        document.documentElement.dir = 'rtl';
+      } else {
+        document.documentElement.dir = 'ltr';
+      }
+    }
+
+    // Canvas Spectrum Visualizer Loop
     const canvas = document.getElementById('visualizer-canvas');
     if (canvas) {
       const ctx = canvas.getContext('2d');
